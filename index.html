@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Project #3 - Quiz: Web Basics</title>
+
+    <!-- App styles -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Defer: run JS after HTML is parsed -->
+    <script src="app.js" defer></script>
+  </head>
+
+  <body>
+    <main class="container">
+      <h1>Quiz: Web Basics</h1>
+
+      <!-- Game rules / how to play -->
+      <p class="rules" aria-live="polite">
+        <strong>How to play:</strong> Choose a category, pick an answer, then
+        press <em>Next</em>. You get 1 point per correct answer. Highscore is
+        stored in localStorage. Keyboard: <em>Tab</em> to focus answers,
+        <em>Enter</em>/<em>Space</em> to select.
+      </p>
+
+      <label for="category">Category</label>
+      <select id="category">
+        <option value="web_html">The Web & HTML</option>
+        <option value="css_basics">CSS Basics</option>
+        <option value="layout">Layout (Flexbox/Grid/Media)</option>
+        <option value="forms">Forms & Validation</option>
+        <option value="accessibility_ux">Accessibility & UX</option>
+        <option value="js_basics">JavaScript Basics</option>
+        <option value="dom_events_storage">
+          DOM, Events, Storage & Timing
+        </option>
+      </select>
+
+      <!-- START SCREEN -->
+      <section id="screen-start" class="screen" aria-labelledby="start-title">
+        <h2 id="start-title" class="visually-hidden">Start Screen</h2>
+        <button id="btn-start" class="btn primary">Start Game</button>
+      </section>
+
+      <!-- QUIZ SCREEN -->
+      <section
+        id="screen-quiz"
+        class="screen hidden"
+        aria-labelledby="quiz-title"
+      >
+        <h2 id="quiz-title" class="visually-hidden">Quiz</h2>
+
+        <!-- Live status -->
+        <div id="status" class="status">
+          <span id="question-number" aria-live="polite"></span>
+          <span id="score" aria-live="polite"></span>
+          <!-- Optional timer could go here -->
+        </div>
+
+        <!-- Current question -->
+        <h3 id="question-text" class="question" tabindex="-1"></h3>
+
+        <!-- Answers (injected by JS) -->
+        <ul id="answers" class="answers"></ul>
+
+        <!-- Navigation -->
+        <div class="actions">
+          <button id="btn-next" class="btn" disabled>Next</button>
+        </div>
+      </section>
+
+      <!-- END SCREEN -->
+      <section
+        id="screen-end"
+        class="screen hidden"
+        aria-labelledby="end-title"
+      >
+        <h2 id="end-title">Finished!</h2>
+        <p>Your score: <strong id="final-score">0</strong></p>
+        <p>Highscore: <strong id="highscore">0</strong></p>
+
+        <div class="actions">
+          <button id="btn-restart" class="btn">Play Again</button>
+          <button id="btn-reset-hs" class="btn">Reset Highscore</button>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
