@@ -1,8 +1,5 @@
-// === Question bank by category (WEB1 syllabus) ===
-// Each question: { text, answers: [...], correct }
 const questionsByCategory = {
   web_html: [
-    // Session 1: The web + HTML
     {
       text: "What does DNS do?",
       answers: [
@@ -50,7 +47,6 @@ const questionsByCategory = {
     },
   ],
   css_basics: [
-    // Session 2: Colors, box model, selectors
     {
       text: "Which property controls the text color?",
       answers: ["background", "font-weight", "color", "border-color"],
@@ -83,7 +79,6 @@ const questionsByCategory = {
     },
   ],
   layout: [
-    // Session 3: Responsive, Flexbox, Grid, Media queries
     {
       text: "Flexbox is best when you need control along…",
       answers: ["Two axes", "One axis", "Z-axis", "No axis"],
@@ -121,7 +116,6 @@ const questionsByCategory = {
     },
   ],
   forms: [
-    // Session 5: Forms + validation
     {
       text: "Which attribute makes an input mandatory?",
       answers: ["checked", "required", "min", "pattern"],
@@ -154,7 +148,6 @@ const questionsByCategory = {
     },
   ],
   accessibility_ux: [
-    // Session 6: Accessibility, semantics, skip link
     {
       text: "What is a skip link used for?",
       answers: [
@@ -197,7 +190,6 @@ const questionsByCategory = {
     },
   ],
   js_basics: [
-    // Session 8: Variables, types, arrays/objects, loops, functions
     {
       text: "Which keyword declares a block-scoped variable that can change?",
       answers: ["var", "let", "const", "define"],
@@ -235,7 +227,6 @@ const questionsByCategory = {
     },
   ],
   dom_events_storage: [
-    // Session 9: DOM, Events, Web Storage, Timing
     {
       text: "Which API selects a single element from the DOM?",
       answers: [
@@ -285,14 +276,12 @@ const categoryLabels = {
 };
 
 function getCategoryLabel(key) {
-  return categoryLabels[key] || key; // fallback hvis en ny kategori kommer til
+  return categoryLabels[key] || key;
 }
 
-// === State ===
-let selectedAnswer = null; // index of the selected answer
+let selectedAnswer = null;
 let index = 0;
 let score = 0;
-// === Highscores per category (stored as JSON in localStorage) ===
 const HIGHSCORES_KEY = "highscoresByCategory";
 
 function loadHighscores() {
@@ -312,7 +301,6 @@ function saveHighscores(obj) {
 
 let highscoresByCategory = loadHighscores();
 
-// The category currently being played (set when the game starts)
 let activeCategory = "web_html";
 
 function getHighscore(cat) {
@@ -328,10 +316,8 @@ function updateHighscoreUIForCategory(cat) {
   highscoreTxt.textContent = getHighscore(cat);
 }
 
-// Active question set (set on start)
 let currentQuestions = [];
 
-// Category dropdown + persistence
 const categorySelect = document.querySelector("#category");
 const savedCat = localStorage.getItem("category");
 if (savedCat && categorySelect) categorySelect.value = savedCat;
@@ -346,7 +332,6 @@ if (categorySelect) {
   });
 }
 
-// === DOM refs ===
 const startScreen = document.querySelector("#screen-start");
 const quizScreen = document.querySelector("#screen-quiz");
 const endScreen = document.querySelector("#screen-end");
@@ -369,15 +354,12 @@ const qNumber = document.querySelector("#question-number");
 const finalScore = document.querySelector("#final-score");
 const highscoreTxt = document.querySelector("#highscore");
 
-// === UI helpers ===
-// Update top bar (question # + score)
 function updateStatus() {
   qNumber.textContent =
     "Question " + (index + 1) + " of " + currentQuestions.length;
   scoreText.textContent = "Score: " + score;
 }
 
-// Save new highscore if beaten
 function updateHighscoreIfNeeded() {
   const currentHs = getHighscore(activeCategory);
 
@@ -388,7 +370,6 @@ function updateHighscoreIfNeeded() {
   updateHighscoreUIForCategory(activeCategory);
 }
 
-// === Screen helpers (show/hide sections) ===
 function showStart() {
   startScreen.classList.remove("hidden");
   quizScreen.classList.add("hidden");
@@ -404,7 +385,6 @@ function showQuiz() {
   index = 0;
   score = 0;
 
-  // Load selected category
   activeCategory = getSelectedCategory();
   currentQuestions = questionsByCategory[activeCategory];
 
@@ -429,8 +409,8 @@ function showHighscores() {
 }
 
 function renderHighscoresTable() {
-  const data = loadHighscores(); // fx { forms: 2, accessibility_ux: 5, ... }
-  hsTableBody.textContent = ""; // ryd tidligere indhold
+  const data = loadHighscores();
+  hsTableBody.textContent = "";
 
   const categories = Object.keys(data).sort(function (a, b) {
     return getCategoryLabel(a).localeCompare(getCategoryLabel(b));
@@ -461,36 +441,30 @@ function renderHighscoresTable() {
   });
 }
 
-// === Render one question ===
 function showQuestion() {
   const q = currentQuestions[index];
 
-  updateStatus(); // refresh status
-  qText.textContent = q.text; // set question text
+  updateStatus();
+  qText.textContent = q.text;
 
-  // Simple entrance animation + focus management
   qText.classList.remove("enter");
   setTimeout(function () {
     qText.classList.add("enter");
   }, 0);
 
-  // Reset answers view + selection state
   answersList.innerHTML = "";
   selectedAnswer = null;
   btnNext.disabled = true;
 
-  // Render answers
   for (let i = 0; i < q.answers.length; i++) {
     const li = document.createElement("li");
     li.textContent = q.answers[i];
-    li.tabIndex = 0; // keyboard focusable
+    li.tabIndex = 0;
 
-    // Mouse select
     li.addEventListener("click", function () {
       chooseAnswer(i, li);
     });
 
-    // Keyboard select (Enter / Space)
     li.addEventListener("keydown", function (event) {
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
@@ -500,7 +474,6 @@ function showQuestion() {
 
     answersList.appendChild(li);
 
-    // Staggered appearance
     li.style.setProperty("--d", i * 70 + "ms");
     setTimeout(function () {
       li.classList.add("appear");
@@ -508,19 +481,15 @@ function showQuestion() {
   }
 }
 
-// Select an answer
 function chooseAnswer(i, li) {
-  // Clear previous selection
   for (let j = 0; j < answersList.children.length; j++) {
     answersList.children[j].classList.remove("selected");
   }
-  // Mark current
   li.classList.add("selected");
   selectedAnswer = i;
   btnNext.disabled = false;
 }
 
-// Navigation buttons
 btnNext.addEventListener("click", function () {
   if (selectedAnswer === null) return;
   checkAnswer(selectedAnswer);
@@ -532,7 +501,6 @@ btnResetHs.addEventListener("click", function () {
   updateHighscoreUIForCategory(activeCategory);
 });
 
-// === Check answer and advance ===
 function checkAnswer(selectedIndex) {
   const q = currentQuestions[index];
   if (selectedIndex === q.correct) score = score + 1;
@@ -545,12 +513,10 @@ function checkAnswer(selectedIndex) {
   }
 }
 
-// === Start/Restart ===
 btnStart.addEventListener("click", function () {
   showQuiz();
 });
 
-// === High Score View ===
 btnRestart.addEventListener("click", function () {
   showStart();
 });
@@ -562,5 +528,4 @@ btnBack.addEventListener("click", function () {
   showStart();
 });
 
-// === Init (start screen first) ===
 showStart();

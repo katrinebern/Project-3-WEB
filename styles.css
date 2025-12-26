@@ -1,17 +1,15 @@
-/* === Color scheme === */
 :root {
-  --color-bg: #f3f4f6; /* slightly darker page background */
+  --color-bg: #f3f4f6;
   --color-surface: #ffffff;
   --color-border: #d1d5db;
-  --color-text: #111827; /* strong default text */
-  --color-accent: #4a6b89; /* primary accent */
-  --color-accent-dark: #2f4858; /* hover/active accent */
-  --color-correct: #b7e4c7; /* correct answer bg */
-  --color-wrong: #f9c0c0; /* wrong answer bg */
+  --color-text: #111827;
+  --color-accent: #4a6b89;
+  --color-accent-dark: #2f4858;
+  --color-correct: #b7e4c7;
+  --color-wrong: #f9c0c0;
   --shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
 }
 
-/* === Base reset / defaults === */
 * {
   box-sizing: border-box;
 }
@@ -29,7 +27,6 @@ body {
   letter-spacing: 0.2px;
 }
 
-/* === Layout container === */
 .container {
   width: min(880px, 90vw);
   margin: 60px auto;
@@ -40,7 +37,6 @@ body {
   box-shadow: var(--shadow);
 }
 
-/* === Headings & text === */
 h1 {
   margin: 0 0 16px 0;
   font-size: clamp(1.8rem, 3vw, 2.3rem);
@@ -55,12 +51,10 @@ p {
   margin: 0 0 12px 0;
 }
 
-/* === Visibility helper === */
 .hidden {
   display: none !important;
 }
 
-/* === Rules / info box === */
 .rules {
   background: #eef2f5;
   border: 1px solid var(--color-border);
@@ -70,7 +64,6 @@ p {
   color: var(--color-text);
 }
 
-/* === Status bar (question # + score) === */
 .status {
   display: flex;
   gap: 16px;
@@ -81,14 +74,12 @@ p {
   color: var(--color-accent-dark);
 }
 
-/* === Question text === */
 .question {
   margin: 8px 0 16px 0;
   font-size: 1.25rem;
   font-weight: 500;
 }
 
-/* === Answers list === */
 .answers {
   list-style: none;
   margin: 0;
@@ -111,7 +102,6 @@ p {
   outline: none;
 }
 
-/* Feedback states */
 .answers li.correct {
   background: var(--color-correct);
 }
@@ -119,7 +109,6 @@ p {
   background: var(--color-wrong);
 }
 
-/* === Buttons === */
 .actions {
   margin-top: 20px;
   display: flex;
@@ -175,7 +164,6 @@ p {
   color: var(--color-accent-dark);
 }
 
-/* === Visually hidden (SR-only) === */
 .visually-hidden {
   position: absolute !important;
   height: 1px;
@@ -185,7 +173,6 @@ p {
   white-space: nowrap;
 }
 
-/* === Simple fade/slide-in === */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -200,7 +187,6 @@ p {
   animation: fadeUp 220ms ease-out;
 }
 
-/* Answer items enter with small stagger */
 .answers li {
   opacity: 0;
   transform: translateY(6px);
@@ -216,7 +202,6 @@ p {
   background: #f3f6f9;
 }
 
-/* Category select */
 #category {
   margin-bottom: 12px;
   padding: 8px 10px;
@@ -226,7 +211,6 @@ p {
   color: var(--color-text);
 }
 
-/* Keyboard focus ring handled explicitly */
 .answers li {
   outline: none;
 }
@@ -245,7 +229,6 @@ p {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.04);
 }
 
-/* High Contrast mode */
 @media (forced-colors: active) {
   .answers li:focus-visible {
     outline: 2px solid CanvasText;

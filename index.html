@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Project #3 - Quiz: Web Basics</title>
 
-    <!-- App styles -->
     <link rel="stylesheet" href="styles.css" />
 
-    <!-- Defer: run JS after HTML is parsed -->
     <script src="app.js" defer></script>
   </head>
 
@@ -43,7 +41,6 @@
         </div>
       </section>
 
-      <!-- NYT “screen” -->
       <section id="screen-highscores" class="screen hidden">
         <h2>High Scores per Category</h2>
 
@@ -62,7 +59,6 @@
         </div>
       </section>
 
-      <!-- QUIZ SCREEN -->
       <section
         id="screen-quiz"
         class="screen hidden"
@@ -70,26 +66,20 @@
       >
         <h2 id="quiz-title" class="visually-hidden">Quiz</h2>
 
-        <!-- Live status -->
         <div id="status" class="status">
           <span id="question-number" aria-live="polite"></span>
           <span id="score" aria-live="polite"></span>
-          <!-- Optional timer could go here -->
         </div>
 
-        <!-- Current question -->
         <h3 id="question-text" class="question" tabindex="-1"></h3>
 
-        <!-- Answers (injected by JS) -->
         <ul id="answers" class="answers"></ul>
 
-        <!-- Navigation -->
         <div class="actions">
           <button id="btn-next" class="btn" disabled>Next</button>
         </div>
       </section>
 
-      <!-- END SCREEN -->
       <section
         id="screen-end"
         class="screen hidden"
