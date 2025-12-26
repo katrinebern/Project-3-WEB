@@ -150,6 +150,31 @@ p {
   background: var(--color-accent-dark);
 }
 
+#screen-highscores {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+#table-highscores {
+  width: 100%;
+  margin: 16px auto 0;
+  border-collapse: collapse;
+  background: var(--color-surface);
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+}
+
+#table-highscores th,
+#table-highscores td {
+  border: 1px solid #ccc;
+  padding: 0.5rem 1rem;
+}
+
+#table-highscores thead th {
+  background: #eef2f5;
+  color: var(--color-accent-dark);
+}
+
 /* === Visually hidden (SR-only) === */
 .visually-hidden {
   position: absolute !important;

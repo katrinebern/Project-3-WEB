@@ -14,31 +14,52 @@
 
   <body>
     <main class="container">
-      <h1>Quiz: Web Basics</h1>
+      <section id="screen-start">
+        <h1>Quiz: Web Basics</h1>
 
-      <p class="rules" aria-live="polite">
-        <strong>How to play:</strong> Choose a category, pick an answer, then
-        press <em>Next</em>. You get 1 point per correct answer. Keyboard: <em>Tab</em> to focus answers,
-        <em>Enter</em>/<em>Space</em> to select.
-      </p>
+        <p class="rules" aria-live="polite">
+          <strong>How to play:</strong> Choose a category, pick an answer, then
+          press <em>Next</em>. You get 1 point per correct answer. Keyboard:
+          <em>Tab</em> to focus answers, <em>Enter</em>/<em>Space</em> to
+          select.
+        </p>
 
-      <label for="category">Category</label>
-      <select id="category">
-        <option value="web_html">The Web & HTML</option>
-        <option value="css_basics">CSS Basics</option>
-        <option value="layout">Layout (Flexbox/Grid/Media)</option>
-        <option value="forms">Forms & Validation</option>
-        <option value="accessibility_ux">Accessibility & UX</option>
-        <option value="js_basics">JavaScript Basics</option>
-        <option value="dom_events_storage">
-          DOM, Events, Storage & Timing
-        </option>
-      </select>
+        <label for="category">Category</label>
+        <select id="category">
+          <option value="web_html">The Web &amp; HTML</option>
+          <option value="css_basics">CSS Basics</option>
+          <option value="layout">Layout (Flexbox/Grid/Media)</option>
+          <option value="forms">Forms &amp; Validation</option>
+          <option value="accessibility_ux">Accessibility &amp; UX</option>
+          <option value="js_basics">JavaScript Basics</option>
+          <option value="dom_events_storage">
+            DOM, Events, Storage &amp; Timing
+          </option>
+        </select>
 
-      <!-- START SCREEN -->
-      <section id="screen-start" class="screen" aria-labelledby="start-title">
-        <h2 id="start-title" class="visually-hidden">Start Screen</h2>
-        <button id="btn-start" class="btn primary">Start Game</button>
+        <div class="actions">
+          <button id="btn-start" class="btn primary">Start Game</button>
+          <button id="btn-view-hs" class="btn">View High Scores</button>
+        </div>
+      </section>
+
+      <!-- NYT “screen” -->
+      <section id="screen-highscores" class="screen hidden">
+        <h2>High Scores per Category</h2>
+
+        <table id="table-highscores">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Highscore</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+
+        <div class="actions">
+          <button id="btn-back" class="btn">Back</button>
+        </div>
       </section>
 
       <!-- QUIZ SCREEN -->

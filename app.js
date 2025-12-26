@@ -274,11 +274,59 @@ const questionsByCategory = {
   ],
 };
 
+const categoryLabels = {
+  web_html: "The Web & HTML",
+  css_basics: "CSS Basics",
+  layout: "Layout (Flexbox/Grid/Media)",
+  forms: "Forms & Validation",
+  accessibility_ux: "Accessibility & UX",
+  js_basics: "JavaScript Basics",
+  dom_events_storage: "DOM, Events, Storage & Timing",
+};
+
+function getCategoryLabel(key) {
+  return categoryLabels[key] || key; // fallback hvis en ny kategori kommer til
+}
+
 // === State ===
 let selectedAnswer = null; // index of the selected answer
 let index = 0;
 let score = 0;
-let highscore = Number(localStorage.getItem("highscore") || 0);
+// === Highscores per category (stored as JSON in localStorage) ===
+const HIGHSCORES_KEY = "highscoresByCategory";
+
+function loadHighscores() {
+  const raw = localStorage.getItem(HIGHSCORES_KEY);
+  if (!raw) return {};
+  try {
+    const obj = JSON.parse(raw);
+    return obj && typeof obj === "object" ? obj : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveHighscores(obj) {
+  localStorage.setItem(HIGHSCORES_KEY, JSON.stringify(obj));
+}
+
+let highscoresByCategory = loadHighscores();
+
+// The category currently being played (set when the game starts)
+let activeCategory = "web_html";
+
+function getHighscore(cat) {
+  return Number(highscoresByCategory[cat] || 0);
+}
+
+function setHighscore(cat, value) {
+  highscoresByCategory[cat] = value;
+  saveHighscores(highscoresByCategory);
+}
+
+function updateHighscoreUIForCategory(cat) {
+  highscoreTxt.textContent = getHighscore(cat);
+}
 
 // Active question set (set on start)
 let currentQuestions = [];
@@ -292,6 +340,11 @@ function getSelectedCategory() {
   localStorage.setItem("category", cat);
   return cat;
 }
+if (categorySelect) {
+  categorySelect.addEventListener("change", function () {
+    updateHighscoreUIForCategory(getSelectedCategory());
+  });
+}
 
 // === DOM refs ===
 const startScreen = document.querySelector("#screen-start");
@@ -302,6 +355,11 @@ const btnStart = document.querySelector("#btn-start");
 const btnNext = document.querySelector("#btn-next");
 const btnRestart = document.querySelector("#btn-restart");
 const btnResetHs = document.querySelector("#btn-reset-hs");
+
+const hsScreen = document.querySelector("#screen-highscores");
+const btnViewHs = document.querySelector("#btn-view-hs");
+const btnBack = document.querySelector("#btn-back");
+const hsTableBody = document.querySelector("#table-highscores tbody");
 
 const qText = document.querySelector("#question-text");
 const answersList = document.querySelector("#answers");
@@ -321,11 +379,13 @@ function updateStatus() {
 
 // Save new highscore if beaten
 function updateHighscoreIfNeeded() {
-  if (score > highscore) {
-    highscore = score;
-    localStorage.setItem("highscore", highscore);
+  const currentHs = getHighscore(activeCategory);
+
+  if (score > currentHs) {
+    setHighscore(activeCategory, score);
   }
-  highscoreTxt.textContent = highscore;
+
+  updateHighscoreUIForCategory(activeCategory);
 }
 
 // === Screen helpers (show/hide sections) ===
@@ -333,7 +393,7 @@ function showStart() {
   startScreen.classList.remove("hidden");
   quizScreen.classList.add("hidden");
   endScreen.classList.add("hidden");
-  highscoreTxt.textContent = highscore;
+  updateHighscoreUIForCategory(getSelectedCategory());
 }
 
 function showQuiz() {
@@ -345,8 +405,8 @@ function showQuiz() {
   score = 0;
 
   // Load selected category
-  const cat = getSelectedCategory();
-  currentQuestions = questionsByCategory[cat];
+  activeCategory = getSelectedCategory();
+  currentQuestions = questionsByCategory[activeCategory];
 
   showQuestion();
 }
@@ -357,6 +417,48 @@ function showEnd() {
   endScreen.classList.remove("hidden");
   finalScore.textContent = score;
   updateHighscoreIfNeeded();
+}
+
+function showHighscores() {
+  startScreen.classList.add("hidden");
+  quizScreen.classList.add("hidden");
+  endScreen.classList.add("hidden");
+  hsScreen.classList.remove("hidden");
+
+  renderHighscoresTable();
+}
+
+function renderHighscoresTable() {
+  const data = loadHighscores(); // fx { forms: 2, accessibility_ux: 5, ... }
+  hsTableBody.textContent = ""; // ryd tidligere indhold
+
+  const categories = Object.keys(data).sort(function (a, b) {
+    return getCategoryLabel(a).localeCompare(getCategoryLabel(b));
+  });
+
+  if (categories.length === 0) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 2;
+    td.textContent = "No highscores yet";
+    tr.appendChild(td);
+    hsTableBody.appendChild(tr);
+    return;
+  }
+
+  categories.forEach(function (cat) {
+    const tr = document.createElement("tr");
+
+    const tdCat = document.createElement("td");
+    tdCat.textContent = getCategoryLabel(cat);
+
+    const tdScore = document.createElement("td");
+    tdScore.textContent = data[cat];
+
+    tr.appendChild(tdCat);
+    tr.appendChild(tdScore);
+    hsTableBody.appendChild(tr);
+  });
 }
 
 // === Render one question ===
@@ -425,9 +527,9 @@ btnNext.addEventListener("click", function () {
 });
 
 btnResetHs.addEventListener("click", function () {
-  localStorage.removeItem("highscore");
-  highscore = 0;
-  highscoreTxt.textContent = highscore;
+  highscoresByCategory[activeCategory] = 0;
+  saveHighscores(highscoresByCategory);
+  updateHighscoreUIForCategory(activeCategory);
 });
 
 // === Check answer and advance ===
@@ -448,7 +550,15 @@ btnStart.addEventListener("click", function () {
   showQuiz();
 });
 
+// === High Score View ===
 btnRestart.addEventListener("click", function () {
+  showStart();
+});
+
+btnViewHs.addEventListener("click", showHighscores);
+
+btnBack.addEventListener("click", function () {
+  hsScreen.classList.add("hidden");
   showStart();
 });
 
